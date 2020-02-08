@@ -1,0 +1,1003 @@
+SHOW DATABASES;
+CREATE DATABASE coffee_store;
+USE coffee_store;
+CREATE TABLE products(
+id INT AUTO_INCREMENT PRIMARY KEY,
+name varchar(30),
+price decimal(3,2)
+);
+show tables;
+
+CREATE TABLE customers(
+id INT AUTO_INCREMENT PRIMARY KEY,
+first_name varchar(30),
+last_name varchar(30),
+gender enum('M','F'),
+phone_number varchar(11)
+);
+
+CREATE TABLE orders(
+id int auto_increment primary key,
+product_id INT,
+customer_id INT,
+order_time DATETIME,
+FOREIGN KEY(product_id) REFERENCES products(id),
+FOREIGN KEY(customer_id) REFERENCES customers(id)
+
+
+);
+
+SELECT * FROM products;
+
+ALTER TABLE products
+ADD COLUMN coffee_origin varchar(30);
+
+ALTER TABLE products
+DROP COLUMN coffee_origin;
+
+CREATE DATABASE example;
+
+USE example;
+CREATE TABLE test(
+id int AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(30),
+age int
+);
+SELECT * FROM test;
+SHOW tables;
+
+DROP TABLE test;
+
+TRUNCATE TABLE test;
+
+
+
+CREATE  DATABASE test;
+USE test;
+CREATE TABLE address(
+id int,
+house_number INT,
+city VARCHAR(20),
+postcode varchar(7)
+);
+
+CREATE TABLE people(
+id INT,
+first_name VARCHAR(20),
+
+last_name VARCHAR(20),
+address_id INT
+);
+
+CREATE TABLE pest(
+id INT,
+name VARCHAR(20),
+species VARCHAR(20),
+owner_id INT
+);
+
+SHOW TABLES;
+
+DESCRIBE address;
+
+-- add the primary key
+
+ALTER TABLE address
+ADD PRIMARY KEY(id);
+
+-- drop the primary key
+
+ALTER TABLE address
+DROP PRIMARY KEY;
+
+DESCRIBE people;
+
+ALTER TABLE people
+ADD PRIMARY KEY(id);
+
+-- add  foreign key
+
+DESCRIBE address;
+DESCRIBE people;
+
+ALTER TABLE address
+ADD PRIMARY KEY(id);
+
+ALTER TABLE people
+ADD CONSTRAINT FK_PeopleAddress
+FOREIGN KEY(address_id) REFERENCES address(id);
+
+-- remove foreign key
+
+ALTER TABLE people
+DROP FOREIGN KEY FK_PeopleAddress;
+
+-- How to add a unique constraint to a column
+
+use test;
+CREATE TABLE pets(
+id int,
+name varchar(30),
+species varchar(30),
+owner_id int
+
+);
+SELECT * FROM pets;
+
+ALTER TABLE pets
+ADD CONSTRAINT u_species UNIQUE(species);
+
+-- How to remove a unique constraint from a column
+
+ALTER TABLE pets
+DROP INDEX u_species;
+
+-- change column name
+
+USE test;
+SELECT * FROM pets;
+
+ALTER TABLE pets CHANGE `species` `animal_type` VARCHAR(20);
+
+ALTER TABLE pets CHANGE `animal_type` `species` VARCHAR(20);
+
+-- change column data type
+
+DESCRIBE address;
+ALTER TABLE address MODIFY city VARCHAR(30); 
+
+ALTER TABLE address MODIFY city CHAR(30); 
+
+ALTER TABLE address MODIFY city INT; 
+
+-- EXCERCISE 1
+
+SELECT * FROM pets;
+
+SELECT * FROM people;
+describe people;
+
+ALTER TABLE pets
+ADD PRIMARY KEY(id);
+
+
+ALTER TABLE people
+ADD PRIMARY KEY(id);
+
+ALTER TABLE pets
+ADD CONSTRAINT cnst_owner_id
+foreign key(owner_id) references people(id);
+
+DESCRIBE pets;
+
+SELECT * FROM people;
+
+ALTER TABLE people
+ADD COLUMN email VARCHAR(40);
+
+ALTER TABLE people
+ADD CONSTRAINT cnst_email UNIQUE(email);
+
+SELECT * FROM pets;
+DESCRIBE pets;
+ALTER TABLE pets
+CHANGE COLUMN `name` `first_name` varchar(40);
+
+SELECT * FROM address;
+DESCRIBE address;
+
+ALTER TABLE address
+MODIFY postcode char(7);
+
+-- inserting data
+USE coffee_store;
+SELECT * FROM products;
+INSERT INTO PRODUCTS(name ,price,coffee_origin)
+VALUES('espressive',2.50,'Brazil');
+INSERT INTO PRODUCTS(name ,price,coffee_origin)
+VALUES('Machhaio',3.00,'Brazil'),('Capichino',3.50,'Costa Rica');
+
+INSERT INTO PRODUCTS(name ,price,coffee_origin)
+VALUES('Latte',3.50,'Indonesia'),('Americano',3.00,'Brazil'),('Flat White',3.50,'Indonesia'),('Filter',3.00,'India');
+
+-- UPDATING DATA INTO THE TABLE
+
+SELECT * FROM products;
+UPDATE products
+SET coffee_origin='Sri Lanka'
+WHERE id=7;
+
+-- UPDATE MORE THAN ONE COLUMN AT A TIME
+
+SELECT * FROM products;
+SET SQL_SAFE_UPDATES=0;
+UPDATE products
+SET price=3.25,coffee_origin='Ethilophia'
+WHERE name='Americano';
+
+-- UPDATE TWO ROWS AT A SAME TIME
+
+UPDATE products
+SET coffee_origin='Colombia'
+WHERE coffee_origin='Brazil';
+SELECT * FROM products;
+
+
+
+SELECT * FROM people;
+DROP TABLE people;
+CREATE TABLE people(
+id int PRIMARY KEY auto_increment,
+name VARCHAR(40),
+age INT,
+gender VARCHAR(1)
+);
+
+INSERT INTO people(id,name,age,gender)
+VALUES(1,'Emma',21,'F');
+
+INSERT INTO people(name,age,gender)
+VALUES('John',30,'M'),('Thomas',27,'M'),('Chris',44,'M'),('Sally',23,'F'),('Frank',55,'M');
+
+-- DELETING DATA FROM TABLES
+
+SELECT * FROM people;
+
+DELETE FROM people
+WHERE name='John';
+
+-- DELETE EVERY ROW IN THE TABLE
+
+DELETE FROM people;
+
+-- COMPLETING THE COFFEE STORE DATABASE
+USE coffee_store;
+
+SELECT * FROM products;
+SELECT * FROM customers;
+SELECT * FROM orders;
+
+INSERT INTO customers (first_name, last_name, gender, phone_number) VALUES ('Chris','Martin','M','01123147789'),('Emma','Law','F','01123439899'),('Mark','Watkins','M','01174592013'),('Daniel','Williams','M',NULL),('Sarah','Taylor','F','01176348290'),('Katie','Armstrong','F','01145787353'),('Michael','Bluth','M','01980289282'),('Kat','Nash','F','01176987789'),('Buster','Bluth','M','01173456782'),('Charlie',NULL,'F','01139287883'),('Lindsay','Bluth','F','01176923804'),('Harry','Johnson','M',NULL),('John','Smith','M','01174987221'),('John','Taylor','M',NULL),('Emma','Smith','F','01176984116'),('Gob','Bluth','M','01176985498'),('George','Bluth','M','01176984303'),('Lucille','Bluth','F','01198773214'),('George','Evans','M','01174502933'),('Emily','Simmonds','F','01899284352'),('John','Smith','M','01144473330'),('Jennifer',NULL,'F',NULL),('Toby','West','M','01176009822'),('Paul','Edmonds','M','01966947113');
+INSERT INTO orders (product_id,customer_id,order_time) VALUES (1,1,'2017-01-01 08-02-11'),(1,2,'2017-01-01 08-05-16'),(5,12,'2017-01-01 08-44-34'),(3,4,'2017-01-01 09-20-02'),(1,9,'2017-01-01 11-51-56'),(6,22,'2017-01-01 13-07-10'),(1,1,'2017-01-02 08-03-41'),(3,10,'2017-01-02 09-15-22'),(2,2,'2017-01-02 10-10-10'),(3,13,'2017-01-02 12-07-23'),(1,1,'2017-01-03 08-13-50'),(7,16,'2017-01-03 08-47-09'),(6,21,'2017-01-03 09-12-11'),(5,22,'2017-01-03 11-05-33'),(4,3,'2017-01-03 11-08-55'),(3,11,'2017-01-03 12-02-14'),(2,23,'2017-01-03 13-41-22'),(1,1,'2017-01-04 08-08-56'),(3,10,'2017-01-04 11-23-43'),(4,12,'2017-01-05 08-30-09'),(7,1,'2017-01-06 09-02-47'),(3,18,'2017-01-06 13-23-34'),(2,16,'2017-01-07 09-12-39'),(2,14,'2017-01-07 11-24-15'),(4,5,'2017-01-08 08-54-11'),(1,1,'2017-01-09 08-03-11'),(6,20,'2017-01-10 10-34-12'),(3,3,'2017-01-10 11-02-11'),(4,24,'2017-01-11 08-39-11'),(4,8,'2017-01-12 13-20-13'),(1,1,'2017-01-14 08-27-10'),(4,15,'2017-01-15 08-30-56'),(1,7,'2017-01-16 10-02-11'),(2,10,'2017-01-17 09-50-05'),(1,1,'2017-01-18 08-22-55'),(3,9,'2017-01-19 09-00-19'),(7,11,'2017-01-19 11-33-00'),(6,12,'2017-01-20 08-02-21'),(3,14,'2017-01-21 09-45-50'),(5,2,'2017-01-22 10-10-34'),(6,24,'2017-01-23 08-32-19'),(6,22,'2017-01-23 08-45-12'),(6,17,'2017-01-23 12-45-30'),(2,11,'2017-01-24 08-01-27'),(1,1,'2017-01-25 08-05-13'),(6,11,'2017-01-26 10-49-10'),(7,3,'2017-01-27 09-23-57'),(7,1,'2017-01-27 10-08-16'),(3,18,'2017-01-27 10-13-09'),(4,19,'2017-01-27 11-02-40'),(3,10,'2017-01-28 08-03-21'),(1,2,'2017-01-28 08-33-28'),(1,12,'2017-01-28 11-55-33'),(1,13,'2017-01-29 09-10-17'),(6,6,'2017-01-30 10-07-13'),(1,1,'2017-02-01 08-10-14'),(2,14,'2017-02-02 10-02-11'),(7,10,'2017-02-02 09-43-17'),(7,20,'2017-02-03 08-33-49'),(4,21,'2017-02-04 09-31-01'),(5,22,'2017-02-05 09-07-10'),(3,23,'2017-02-06 08-15-10'),(2,24,'2017-02-07 08-27-26'),(1,1,'2017-02-07 08-45-10'),(6,11,'2017-02-08 10-37-10'),(3,13,'2017-02-09 08-58-18'),(3,14,'2017-02-10 09-12-40'),(5,4,'2017-02-10 11-05-34'),(1,2,'2017-02-11 08-00-38'),(3,8,'2017-02-12 08-08-08'),(7,20,'2017-02-12 09-22-10'),(1,1,'2017-02-13 08-37-45'),(5,2,'2017-02-13 12-34-56'),(4,3,'2017-02-14 08-22-43'),(5,4,'2017-02-14 09-12-56'),(3,5,'2017-02-15 08-09-10'),(6,7,'2017-02-15 09-05-12'),(1,8,'2017-02-15 09-27-50'),(2,9,'2017-02-16 08-51-12'),(3,10,'2017-02-16 13-07-46'),(4,11,'2017-02-17 08-03-55'),(4,12,'2017-02-17 09-12-11'),(5,10,'2017-02-17 11-41-17'),(6,18,'2017-02-17 13-05-56'),(7,19,'2017-02-18 08-33-27'),(1,17,'2017-02-19 08-12-31'),(1,1,'2017-02-20 09-50-17'),(3,5,'2017-02-20 09-51-29'),(4,6,'2017-02-20 10-43-39'),(3,1,'2017-02-21 08-32-17'),(1,1,'2017-02-21 10-30-11'),(3,2,'2017-02-21 11-08-45'),(4,3,'2017-02-22 11-46-32'),(2,15,'2017-02-22 13-35-16'),(6,13,'2017-02-23 08-34-48'),(4,24,'2017-02-24 08-32-03'),(2,13,'2017-02-25 08-03-12'),(7,17,'2017-02-25 09-34-23'),(7,23,'2017-02-25 11-32-54'),(5,12,'2017-02-26 11-47-34'),(6,4,'2017-02-27 12-12-34'),(1,1,'2017-02-28 08-59-22');
+
+-- SECTION 6 STARTS
+
+-- SELECTING FROM A TABLE SELECT STATEMENT
+
+USE coffee_store;
+
+SELECT * FROM customers;
+SELECT last_name FROM customers;
+SELECT last_name, phone_number FROM customers;
+
+-- WHERE CLAUSE
+
+SELECT * FROM products
+WHERE coffee_origin='colombia';
+
+SELECT * FROM products
+WHERE price=3.00;
+
+SELECT * FROM products
+WHERE price=3.00
+AND coffee_origin='colombia';
+
+SELECT * FROM products
+WHERE price=3.00
+OR coffee_origin='colombia';
+
+-- USING INEQUALITY SYMBOLS
+
+SELECT * FROM products
+WHERE price>=3.00;
+
+SELECT * FROM products
+WHERE price>3.00;
+
+SELECT * FROM products
+WHERE price<3.00;
+
+SELECT * FROM products
+WHERE price<=3.00;
+
+-- NULL VALUES
+
+SELECT * FROM CUSTOMERS;
+
+SELECT * FROM CUSTOMERS
+WHERE phone_number IS NULL;
+
+SELECT * FROM CUSTOMERS
+WHERE phone_number IS NOT NULL;
+
+-- EXCERCISE 1
+
+SELECT * FROM customers;
+SELECT * FROM products;
+
+-- Question1
+
+SELECT first_name, phone_number FROM customers
+WHERE gender='F' 
+AND last_name='Bluth';
+
+-- Question2
+
+SELECT name FROM products
+WHERE price>3.00
+OR coffee_origin='Sri Lanka';
+
+-- Question3
+
+SELECT * FROM customers
+WHERE gender='M'
+AND phone_number IS NULL;
+
+-- IN,NOT IN
+
+SELECT * FROM customers
+WHERE last_name IN ('Taylor','Bluth','Armstrong');
+
+SELECT * FROM customers
+WHERE first_name NOT IN ('Kaite ','John','George');
+
+-- BETWEEN
+
+SELECT * FROM orders;
+SELECT * FROM customers;
+
+SELECT product_id, customer_id,order_time FROM orders
+WHERE order_time BETWEEN '2017-01-01' AND '2017-01-07';
+
+SELECT product_id, customer_id,order_time FROM orders
+WHERE customer_id BETWEEN 5 AND 10;
+
+SELECT * FROM customers
+WHERE last_name BETWEEN 'A' AND 'L';
+
+-- LIKE
+
+SELECT * FROM customers
+WHERE last_name LIKE 'W%';
+
+SELECT * FROM customers
+WHERE last_name LIKE '%o%';
+
+SELECT * FROM customers
+WHERE first_name LIKE '_o_';
+
+SELECT * FROM PRODUCTS
+WHERE price LIKE '3%';
+
+-- ORDER BY
+
+SELECT * FROM products
+ORDER BY price ASC;
+
+SELECT * FROM products
+ORDER BY price DESC;
+
+SELECT * FROM customers
+ORDER BY last_name ASC;
+
+SELECT * FROM customers
+ORDER BY last_name DESC;
+
+SELECT * FROM orders
+WHERE customer_id=1
+ORDER BY order_time ASC;
+
+SELECT * FROM orders
+WHERE customer_id=1
+ORDER BY order_time DESC;
+
+SELECT * FROM orders
+WHERE customer_id=1
+ORDER BY order_time;
+
+-- EXCERCISE 2
+
+SELECT * FROM products;
+
+
+-- Q1
+
+SELECT name, price FROM products
+WHERE coffee_origin IN('Colombia','Indonesia')
+ORDER BY name ASC;
+
+-- Q2
+
+SELECT * FROM orders;
+
+SELECT * FROM orders
+WHERE customer_id IN (2,4,6,8) AND order_time BETWEEN '2017-02-01' AND '2017-02-28';
+
+-- Q3
+
+SELECT * FROM customers;
+
+SELECT first_name, phone_number FROM customers
+WHERE last_name LIKE '%ar%';
+
+-- DISTINCT
+
+SELECT coffee_origin FROM products;
+
+SELECT DISTINCT coffee_origin FROM products;
+
+SELECT customer_id FROM orders
+WHERE order_time BETWEEN '2017-02-01' AND '2017-02-28';
+
+SELECT DISTINCT customer_id FROM orders
+WHERE order_time BETWEEN '2017-02-01' AND '2017-02-28';
+
+SELECT DISTINCT customer_id, product_id FROM orders
+WHERE order_time BETWEEN '2017-02-01' AND '2017-02-28';
+
+
+-- LIMIT
+
+SELECT * FROM customers;
+
+SELECT * FROM customers
+LIMIT 5;
+
+SELECT * FROM customers
+LIMIT 5 OFFSET 5;
+
+SELECT * FROM customers
+LIMIT 10 OFFSET 5;
+
+SELECT * FROM customers
+ORDER BY last_name
+LIMIT 10 ;
+
+-- COLUMN NAME ALIAS
+
+SELECT name, price, coffee_origin FROM products;
+
+SELECT name AS COFFEE, price, coffee_origin AS COUNTRY FROM products;
+
+-- EXCERCISE 3
+
+-- Q1
+
+SELECT * FROM customers;
+
+SELECT DISTINCT last_name FROM customers
+ORDER BY last_name;
+
+-- Q2
+SELECT * FROM orders;
+
+SELECT * FROM orders
+WHERE customer_id=1
+AND order_time BETWEEN '2017-02-01' AND '2017-02-28'
+ORDER BY order_time ASC
+LIMIT 3;
+
+-- Q3
+
+SELECT * FROM products;
+
+SELECT name, price AS retail_price, coffee_origin FROM products;
+
+
+-- SECTION 7
+
+-- JOINS
+
+-- INNER JOINS
+
+SELECT * FROM products;
+SELECT * FROM orders;
+
+SELECT products.name, orders.order_time FROM orders
+INNER JOIN products ON orders.product_id=products.id;
+
+SELECT p.name, p.price, o.order_time FROM orders o
+JOIN products p ON o.product_id=p.id;
+
+SELECT p.name, p.price, o.order_time FROM orders o
+JOIN products p ON o.product_id=p.id
+ORDER BY o.order_time;
+
+SELECT p.name, p.price, o.order_time FROM orders o
+JOIN products p ON o.product_id=p.id
+WHERE o.product_id=5
+ORDER BY o.order_time;
+
+-- LEFT JOIN
+USE coffee_store;
+SELECT * FROM customers;
+SELECT * FROM orders;
+
+UPDATE orders
+SET customer_id=null
+WHERE id = 1;
+
+SELECT o.id,c.phone_number,c.last_name,o.order_time FROM orders o
+LEFT JOIN customers c ON o.customer_id=c.id
+ORDER BY o.order_time
+LIMIT 10;
+
+SELECT o.id,c.phone_number,c.last_name,o.order_time FROM customers c
+LEFT JOIN orders o ON c.id=o.customer_id
+ORDER BY o.order_time
+LIMIT 10;
+
+-- RIGHT JOINS
+
+SELECT o.id,c.phone_number,c.last_name,o.order_time FROM customers c
+RIGHT JOIN orders o ON c.id=o.customer_id
+ORDER BY o.order_time
+LIMIT 10;
+
+SELECT o.id,c.phone_number,c.last_name,o.order_time FROM orders o
+RIGHT JOIN customers c ON o.customer_id=c.id
+ORDER BY o.order_time
+LIMIT 10;
+
+UPDATE orders
+SET customer_id=1
+WHERE id=1;
+
+-- JOINING MORE THAN TWO TABLES
+
+SELECT * FROM orders;
+SELECT * FROM customers;
+SELECT * FROM products;
+
+SELECT p.name, p.price, c.first_name, c.last_name, o.order_time FROM products p
+JOIN orders o ON p.id=o.product_id
+JOIN customers c ON c.id = o.customer_id;
+
+SELECT p.name, p.price, c.first_name, c.last_name, o.order_time FROM products p
+JOIN orders o ON p.id=o.product_id
+JOIN customers c ON c.id = o.customer_id
+WHERE c.last_name='Martin'
+ORDER BY o.order_time;
+
+-- EXCERCISE 1
+
+SELECT * FROM orders;
+SELECT * FROM products;
+SELECT * FROM customers;
+
+-- Q1
+
+SELECT o.id, c.phone_number FROM orders o
+INNER JOIN customers c ON o.customer_id=c.id
+WHERE o.product_id=4;
+
+-- Q2
+
+SELECT p.name, o.order_time FROM products p
+INNER JOIN orders o ON p.id = o.product_id
+WHERE p.name='Filter'
+AND order_time BETWEEN '2017-01-15' AND '2017-02-14'
+ORDER BY o.order_time ;
+
+-- Q3
+
+SELECT p.name, p.price, o.order_time, c.gender FROM products p 
+JOIN orders o ON p.id = o.product_id
+JOIN customers c ON  c.id = o.customer_id
+WHERE c.gender='F';
+
+-- SECTION 8:- DATABASE DESIGN
+
+-- 
+
+USE coffee_store;
+SELECT * FROM products;
+
+SELECT coffee_origin from products
+WHERE name='espressive'
+AND price>2;
+
+
+
+-- CREATING A CINEMA TICKET BOOKING SYSTEM
+
+-- CREATING FILM TABLE
+	
+SHOW DATABASES;
+CREATE DATABASE cinema_booking_system;
+
+USE cinema_booking_system;
+
+CREATE TABLE films(
+id INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(45)  NOT NULL UNIQUE,
+length_min INT NOT NULL
+
+);
+
+SHOW TABLES;
+
+SELECT * FROM films;
+DESCRIBE films;
+
+
+-- CREATE CUSTOMER TABLE
+
+CREATE TABLE customers(
+id INT PRIMARY KEY AUTO_INCREMENT,
+first_name VARCHAR(45),
+last_name VARCHAR(45) NOT NULL,
+email VARCHAR(45) NOT NULL UNIQUE
+);
+
+DESCRIBE customers;
+
+-- CREATING ROOMS TABLE
+
+CREATE TABLE rooms(
+id INT PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(45) NOT NULL,
+no_seats INT NOT NULL
+);
+
+SHOW TABLES;
+DESCRIBE rooms;
+
+-- CREATING SCREENING TABLE
+
+CREATE TABLE screenings(
+id INT PRIMARY KEY AUTO_INCREMENT,
+film_id INT NOT NULL,
+room_id INT NOT NULL,
+start_time DATETIME NOT NULL,
+FOREIGN KEY(film_id) REFERENCES films(id),
+FOREIGN KEY(room_id) REFERENCES rooms(id)
+);
+
+DESCRIBE screenings;
+
+-- CREATE SEATS TABLE
+USE cinema_booking_system;
+
+CREATE TABLE seats(
+id INT PRIMARY KEY AUTO_INCREMENT,
+ro CHAR(1) NOT NULL,
+number INT NOT NULL,
+room_id INT NOT NULL,
+FOREIGN KEY(room_id) REFERENCES rooms(id)
+);
+
+ALTER TABLE seats CHANGE `ro` `row` CHAR(1);
+
+
+
+
+SHOW TABLES;
+DESCRIBE seats;
+
+
+-- CREATING BOOKING TABLE
+
+CREATE TABLE bookings(
+id INT PRIMARY KEY AUtO_INCREMENT,
+screening_id INT NOT NULL,
+customer_id INT NOT NULL,
+FOREIGN KEY(screening_id) REFERENCES screenings(id),
+FOREIGN KEY(customer_id) REFERENCES customers(id)
+);
+
+-- CREATING RESERVED SEAT TABLE
+
+CREATE TABLE reserved_seat(
+id INT PRIMARY KEY AUTO_INCREMENT,
+booking_id INT NOT NULL,
+seat_id INT NOT NULL,
+FOREIGN KEY(booking_id) REFERENCES bookings(id),
+FOREIGN KEY(seat_id) REFERENCES seats(id)
+);
+
+SHOW TABLES;
+
+DESCRIBE reserved_seat;
+USE cinema_booking_system;
+SELECT * FROM bookings;
+DESCRIBE bookings;
+
+
+
+-- SECTION 10
+
+-- COUNT
+
+SELECT * FROM CUSTOMERS;
+SELECT COUNT(*) FROM CUSTOMERS;
+SELECT COUNT(last_name) FROM CUSTOMERS;
+SELECT COUNT(first_name) FROM CUSTOMERS;
+
+SELECT COUNT(*) FROM CUSTOMERS
+WHERE last_name='Smith';
+
+SELECT COUNT(*) FROM CUSTOMERS
+WHERE first_name IS NULL;
+
+-- SUM
+
+SELECT * FROM rooms;
+SELECT SUM(no_seats) FROM rooms;
+
+SELECT SUM(no_seats) FROM rooms
+WHERE id>1;
+
+-- MIN and MAX
+
+SELECT * FROM films;
+
+SELECT MAX(length_min) FROM films;
+
+SELECT MIN(length_min) FROM films;
+
+-- AVERAGE
+
+SELECT * FROM films;
+
+SELECT AVG(length_min) FROM films;
+
+SELECT AVG(length_min) FROM films
+WHERE length_min >120;
+
+-- GROUP BY
+
+SELECT COUNT(id) FROM bookings;
+
+
+SELECT id, MAX(length_min) FROM films
+GROUP BY id;
+
+SELECT * FROM films;
+
+-- SUBQUERIES
+
+-- NON-RELEATED SUBQUERIES IN WHERE CLAUSE
+
+
+USE cinema_booking_system;
+SELECT * FROM screenings;
+SELECT * FROM films;
+
+SELECT id,start_time FROM screenings
+WHERE film_id IN
+(SELECT id FROM films WHERE length_min > 120);
+
+SELECT id FROM films WHERE length_min > 120;
+SELECT film_id,id,start_time FROM screenings;
+
+--
+SELECT * FROM customers;
+SELECT * FROM bookings;
+SELECT first_name, last_name FROM customers
+WHERE id IN
+(SELECT customer_id FROM bookings
+WHERE screening_id = 1);
+
+--  NON-CORELATED SUBQUERIES
+
+SELECT * FROM reserved_seat;
+
+SELECT booking_id, COUNT(seat_id) FROM reserved_seat
+GROUP BY booking_id;
+
+SELECT MAX(no_seats)FROM
+(SELECT booking_id, COUNT(seat_id) AS no_seats FROM reserved_seat
+GROUP BY booking_id)b;
+
+-- HERE 'b' is name of derived table i.e SELECT booking_id, COUNT(seat_id) AS no_seats FROM reserved_seat GROUP BY booking_id
+
+SELECT AVG(no_seats)FROM
+(SELECT booking_id, COUNT(seat_id) AS no_seats FROM reserved_seat
+GROUP BY booking_id)b;
+
+-- CORRELATED SUBQUERIES
+SELECT * FROM bookings;
+
+SELECT screening_id, customer_id
+FROM bookings
+ORDER BY screening_id;
+
+SELECT screening_id, customer_id,
+(SELECT COUNT(seat_id)
+FROM reserved_seat WHERE booking_id = b.id)
+FROM bookings b
+ORDER BY screening_id;
+
+-- EXCERCISE
+
+-- 1. Select the film name and length for all films with a length greater than the average film length. 
+SELECT * FROM films;
+SELECT name,length_min FROM films
+WHERE length_min > (SELECT AVG(length_min) FROM films);
+
+-- 2. Select the maximum number and the minimum number of screenings for a particular film.
+
+SELECT * FROM screenings;
+SELECT film_id, COUNT(id) FROM screenings
+GROUP BY film_id;
+
+SELECT MAX(No_Count) AS MaximumNumber, MIN(No_Count) AS MinimumNumber FROM
+(SELECT film_id, COUNT(id) AS No_Count FROM screenings
+GROUP BY film_id) a;
+
+-- 3. Select each film name and the number of screenings for that film.
+
+SELECT * FROM films;
+
+SELECT name,
+(SELECT COUNT(id) FROM screenings
+WHERE film_id = f.id
+)
+FROM films f;
+
+
+--  SECTION 12 MySQL Functions - String Functions and Date Functions
+
+
+-- CONCATENATE 
+
+-- SELECT CONCAT(column1, column2) AS new_column_name FROM table;
+
+SELECT CONCAT(first_name, last_name) AS full_name FROM customers;
+-- add the space
+SELECT CONCAT(first_name," ", last_name) AS full_name FROM customers;
+ 
+SELECT CONCAT(first_name," ", last_name," and his/her email is ",email) AS full_name FROM customers;
+ 
+SELECT CONCAT("This is first name:-",first_name,". This is last name:- ", last_name,".This is email address:-",email) AS full_name FROM customers;
+ 
+-- SUBSTRING
+
+SELECT SUBSTRING("Example",3,3) AS Sub; -- amp
+SELECT SUBSTRING("Example",3) AS Sub; -- ample
+
+SELECT name FROM films;
+SELECT SUBSTRING(name,1,3) AS short_name FROM films;
+SELECT SUBSTRING(name,-2,2) AS short_name FROM films; -- return last two letters
+SELECT SUBSTRING(name,-6,5) AS short_name FROM films;
+
+
+-- UPPER AND LOWER CASE
+
+-- SELECT UPPER(column1) AS new_column_name FROM table;
+-- SELECT LOWER(column1) AS new_column_name FROM table;
+
+SELECT name FROM rooms;
+SELECT UPPER(name) AS name FROM rooms;
+SELECT LOWer(name) FROM rooms;
+
+-- EXCERCISE 1
+
+use cinema_booking_system;
+
+-- Concatenate the film names and length from the films table.
+
+SELECT * FROM films;
+SELECT CONCAT(name, length_min) AS name_length FROM films;
+
+
+-- Extract the customers email from the 5th character onwards.
+
+SELECT * FROM customers;
+SELECT SUBSTRING(email,5) AS email_5th FROM customers;
+
+
+-- Select the customers first name in lower case and their last name in upper case 
+-- for each customer with a last name of ‘Smith’.  
+SELECT * FROM customers;
+SELECT UPPER(first_name) AS first_name, LOWer(last_name) AS last_name FROM customers
+WHERE last_name = "Smith";
+
+-- Select the last 3 letters of each film name from the films table.
+SELECT * FROM films;
+SELECT SUBSTRING(name,-3) AS name_lst_3 FROM films;
+
+
+-- Concatenate the first three letters in the first_name and last_name columns together 
+-- from the customers table.
+SELECT * FROM customers;
+SELECT CONCAT( SUBSTRING(first_name,1,3), SUBSTRING(last_name,1,3)) AS first_3_last_3 FROM customers;
+
+-- DATE FUNCTIONS
+SELECT DATE('018-06-05 07:45:32');
+
+SELECT start_time FROM screenings;
+SELECT DATE(start_time) FROM screenings;
+
+SELECT * FROM screenings
+WHERE DATE(start_time) = '2017-10-03';
+
+SELECT * FROM screenings
+WHERE DATE(start_time) BETWEEN '2017-10-03' AND '2017-10-05';
+
+-- MONTH FUNCTION
+
+SELECT MONTH('2018-06-05 07:45:32');
+
+SELECT start_time FROM screenings;
+
+SELECT MONTH(start_time) FROM screenings;
+
+SELECT * FROM screenings 
+WHERE MONTH(start_time) = '10';
+
+-- YEAR FUNCTION
+
+SELECT YEAR('2018-06-05');
+
+SELECT start_time FROM screenings;
+
+SELECT YEAR(start_time) FROM screenings;
+
+SELECT * FROM screenings
+WHERE YEAR(start_time) = '2017';
+
+
+-- EXCERCISE 2
+
+-- Select the film id and start time from the screenings table for the date of 20th of October 2017.
+
+SELECT film_id, start_time FROM screenings
+WHERE DATE(start_time) = '2017-10-20';
+
+-- Select all the data from the screenings table for the start time between the 6th and 13th of 
+-- October 2017.
+
+SELECT * FROM screenings
+WHERE DATE(start_time) BETWEEN '2017-10-06' AND '2017-10-13';
+
+-- Select all the data from the screenings table for October 2017.
+
+SELECT * FROM screenings
+WHERE MONTH(start_time) = '10'
+AND YEAR(start_time) = '2017';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
